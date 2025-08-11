@@ -1,0 +1,243 @@
+* {
+    padding: 0;
+    margin: 0;
+    color: white;
+    font-family: sans-serif;
+}
+
+body {
+    display: flex;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* un peu moins large, Twitter est souvent plus serré */
+}
+
+.profile h2 {
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: capitalize;
+    margin: 0;
+}
+
+.img-box {
+    width: 48px;  /* Twitter utilise souvent 48px */
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid white; /* border un peu plus fin */
+    flex-shrink: 0;
+    box-shadow: 0 0 3px rgba(0,0,0,0.1); /* légère ombre pour un effet pro */
+}
+
+.img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* important pour que l'image remplisse bien le cercle sans déformation */
+    display: block;
+}
+
+.menu {
+    background-color: #123;
+    width: 60px;
+    height: 100vh;
+    padding: 20px;
+    overflow-y: auto;        /* Ajouté : permet de faire défiler le contenu verticalement */
+    overflow-x: hidden;
+    transition: .5s;
+    position: fixed;
+    /*scrollbar-width: thin;   Optionnel : pour affiner la barre de défilement sur Firefox */
+}
+
+/* Permet d'avoir la même barre fine sur Chrome */
+.menu::-webkit-scrollbar {
+    width: 6px;
+}
+.menu::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,0.3);
+    border-radius: 3px;
+}
+
+.menu:hover {
+    width: 260px;
+}
+
+ul {
+    list-style: none;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    height: 95%
+    /* Supprimer height: 95% pour permettre à ul de s’étendre dynamiquement */
+}
+ul li a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 10px 15px; /* ajoute un padding horizontal pour un peu d’espace */
+    margin: 10px 0;
+    border-radius: 8px;
+    gap: 15px; /* réduit un peu l’écart entre icône et texte */
+    transition: 0.5s;
+    font-size: 16px; /* taille texte */
+    line-height: 1; /* pour réduire l’espacement vertical du texte */
+}
+
+ul li a i {
+    font-size: 20px; /* taille icône */
+    line-height: 1; /* évite décalage */
+    display: flex; /* garantit que l’icône est un bloc flex */
+    align-items: center; /* centre verticalement l’icône */
+}
+
+/* Optionnel : si le texte a une légère différence verticale, on peut forcer une ligne de base */
+ul li a p {
+    margin: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+}
+
+
+.log-out {
+    margin-top: auto; /* pousse vers le bas naturellement si le reste dépasse */
+    width: 100%;
+}
+
+.content {
+    width: 100%;
+    margin: 10px;
+    padding-left: 60px;
+}
+
+.little-infos {
+    background-color: rgb(69, 127, 127);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.data-infos {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.data-infos .box {
+    background-color: #123;
+    height: 150px;
+    flex-basis: 150px;
+    flex-grow: 1;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.data-infos .box i {
+    font-size: 40px;
+}
+
+.data-infos .box .data {
+    text-align: center;
+}
+
+.data-infos .box .data span {
+    font-size: 30px;
+}
+
+.alert-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 350px;
+}
+
+.custom-alert {
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left: 5px solid #0d6efd;
+    color: white;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Couleurs selon les types de message */
+.alert-success {
+    border-left-color: #198754;
+}
+.alert-warning {
+    border-left-color: #ffc107;
+}
+.alert-danger {
+    border-left-color: #dc3545;
+}
+.alert-info {
+    border-left-color: #0dcaf0;
+}
+
+.custom-alert .close-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    line-height: 1;
+    color: white;
+    cursor: pointer;
+}
+
+/* index_css.css */
+
+/* Conteneur */
+.search-container {
+    display: flex;
+    justify-content: flex-end; /* Aligné à droite */
+    margin-bottom: 15px;
+}
+
+/* Champ de recherche */
+.search-container input[type="text"] {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+/* Effet focus */
+.search-container input[type="text"]:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Bouton */
+.search-container button {
+    padding: 8px 15px;
+    margin-left: 8px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-container button:hover {
+    background-color: #0056b3;
+}
+

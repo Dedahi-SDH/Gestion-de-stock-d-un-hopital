@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Liste des Sorties{% endblock %}
+{% block profil_image %}
+    <div class="img-box mb-2">
+        {% if utilisateur.image.name %}
+            <img src="{{ utilisateur.image.url }}" alt="Photo de {{ utilisateur.first_name }}" class="rounded-circle profile-img">
+        {% else %}
+            <img src="{% static 'images/default-user.png' %}" alt="Image par défaut" class="rounded-circle profile-img">
+        {% endif %}
+    </div>
+    <h2>{{ utilisateur.first_name }} {{ utilisateur.last_name }}</h2>
+    <small class="text-muted">{{ utilisateur.role }}</small>
+{% endblock %}
+{% block content %}
+<div class="content">
+    <div class="mt-3 mb-3">
+        <div class="container-fluid">
+            <form method="get" class="d-flex" style="width: 100%;">
+                <input type="text" name="q" class="form-control me-2"
+                       placeholder="Rechercher une sortie...">
+                <button type="submit" class="btn btn-primary">Chercher</button>
+            </form>
+        </div>
+    </div>
+        {% if sortie.exists %}
+            <div class="table-responsive">
+                <table class="table">
+                    <div class="little-infos">
+                        <p>Liste des Sorties</p>
+                        <i class="fas fa-briefcase-medical"></i>
+                    </div>
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nom du Produit</th>
+                            <th scope="col">Libellé</th>
+                            <th scope="col">Quantité Sortie</th>
+                            <th scope="col">Catégorie</th>
+                            <th scope="col">Date de Sortie</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in sortie %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ s.stock.produit.nom }}</td>
+                                <td>{{ s.stock.produit.libelle }}</td>
+                                <td>{{ s.quantite_sortie }}</td>
+                                <td>{{ s.stock.categorie }}</td>
+                                <td>{{ s.date_sortie|date:"d/m/Y" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                Aucune sortie enregistrée pour le moment.
+            </div>
+        {% endif %}
+</div>
+{% endblock %}

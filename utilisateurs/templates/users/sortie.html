@@ -1,0 +1,53 @@
+{% extends "navbar.html" %}
+{% block title %}Liste des Sorties{% endblock %}
+{% block content %}
+<div class=" mt-3">
+    <div class="text-center my-4">
+        <h2 class="text-primary">
+            <i class="bi bi-box-arrow-up"></i> Liste des Sorties
+        </h2>
+    </div>
+    <div class="mt-3 mb-3">
+        <div class="container-fluid">
+            <form method="get" class="d-flex" style="width: 100%;">
+                <input type="text" name="q" class="form-control me-2"
+                       placeholder="Rechercher un produit..."
+                       value="{{ request.GET.q }}">
+                <button type="submit" class="btn btn-primary">Chercher</button>
+            </form>
+        </div>
+    </div>
+    {% if sortie %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nom du Produit</th>
+                        <th scope="col">Libellé</th>
+                        <th scope="col">Quantité Sortie</th>
+                        <th scope="col">Catégorie</th>
+                        <th scope="col">Date de Sortie</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in sortie %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ s.stock.produit.nom }}</td>
+                            <td>{{ s.stock.produit.libelle }}</td>
+                            <td>{{ s.quantite_sortie }}</td>
+                            <td>{{ s.stock.categorie }}</td>
+                            <td>{{ s.date_sortie|date:"d/m/Y" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            Aucune sortie enregistrée pour le moment.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

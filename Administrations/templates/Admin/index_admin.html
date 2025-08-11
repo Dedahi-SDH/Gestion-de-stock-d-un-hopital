@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Acceuil {% endblock %}
+{% block profil_image %}
+    <div class="img-box mb-2">
+        {% if utilisateur.image.name %}
+            <img src="{{ utilisateur.image.url }}" alt="Photo de {{ utilisateur.first_name }}" class="rounded-circle profile-img">
+        {% else %}
+            <img src="{% static 'images/default-user.png' %}" alt="Image par défaut" class="rounded-circle profile-img">
+        {% endif %}
+    </div>
+    <h2>{{ utilisateur.first_name }} {{ utilisateur.last_name }}</h2>
+    <small class="text-muted">{{ utilisateur.role }}</small>
+{% endblock %}
+{% block content %}
+<div class="content">
+    <div class="data-infos">
+        <div class="box">
+            <i class="fas fa-arrow-circle-up"></i>
+            <div class="data">
+                <p>Stocks</p>
+                <span>{{ stock_count }}</span>
+            </div>
+        </div>
+        <div class="box">
+            <i class="fas fa-user-group"></i>
+            <div class="data">
+                <p>Administrateur</p>
+                <span>{{ utilisateur_count_admin }}</span>
+            </div>
+        </div>
+        <div class="box">
+            <i class="fas fa-user-group"></i>
+            <div class="data">
+                <p>Utilisateurs</p>
+                <span>{{ utilisateur_count_user }}</span>
+            </div>
+        </div>
+    </div>
+    <!-- Produits en dessous du seuil -->
+    {% if seuil_bas %}
+    <div class="container mt-4">
+        <div class="little-infos">
+            <p>Produits en dessous du seuil ou en rupture</p>
+            <i class="fas fa-triangle-exclamation text-warning"></i>
+        </div>
+            <table class="table table-bordered table-striped">
+                <thead class="table-warning">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Nom</th>
+                        <th>Libellé</th>
+                        <th>Quantité Actuelle</th>
+                        <th>Seuil</th>
+                        <th>Catégorie</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in seuil_bas %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ stock.produit.nom }}</td>
+                        <td>{{ stock.produit.libelle }}</td>
+                        <td>{{ stock.quantite_actuelle }}</td>
+                        <td>{{ stock.produit.seuil }}</td>
+                        <td>{{ stock.produit.categorie }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    <!-- Tableau des stocks -->
+    <table class="table mt-5">
+        <div class="little-infos">
+            <p>Liste des produits</p>
+            <i class="fas fa-briefcase-medical"></i>
+        </div>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Libellé</th>
+                <th>Quantité actuelle</th>
+                <th>Quantité sorite</th>
+                <th>Quantité entré</th>
+                <th>Quantité initial</th>
+                <th>Catégorie</th>
+                <th>Seuil</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in stocks %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ stock.produit.nom }}</td>
+                <td>{{ stock.produit.libelle }}</td>
+                <td>{{ stock.quantite_actuelle }}</td>
+                <td>{{ stock.quantite_sortie }}</td>
+                <td>{{ stock.quantite_entre }}</td>
+                <td>{{ stock.quantite_initial }}</td>
+                <td>{{ stock.categorie }}</td>
+                <td>{{ stock.produit.seuil }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <!-- Tableau des utilisateurs -->
+    <table class="table mt-5">
+        <div class="little-infos">
+            <p>Liste des utilisateurs</p>
+            <i class="fas fa-briefcase-medical"></i>
+        </div>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Poste</th>
+                <th>Téléphone</th>
+                <th>Catégorie</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in utilisateurs %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ u.first_name }}</td>
+                <td>{{ u.num_poste }}</td>
+                <td>{{ u.num_phone }}</td>
+                <td>{{ u.categorie }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "navbar.html" %}
+{% load static %}
+{% block title %}Nouvelle commande{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Lancer un commande multiple</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ formset.management_form }}
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Quantité</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in formset %}
+                    <tr>
+                        <td>{{ form.stock }}</td>
+                        <td>{{ form.quantite }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="card-footer bg-light text-center">
+            <button type="submit" class="btn btn-outline-primary w-100">Valider la commande</button>
+            <a href="{% url 'index' %}" class="btn btn-outline-primary mt-3 w-100">Retour</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

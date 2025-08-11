@@ -1,0 +1,59 @@
+{% extends "navbar.html" %}
+{% load static %}
+{% block title %}Facture{% endblock %}
+{% block content %}
+<div class="container mt-4">
+
+    <!-- Code-barres à gauche et date à droite -->
+<!--    <div class="row mb-4">-->
+<!--        <div class="col-md-6 text-start">-->
+<!--            <img src="data:image/png;base64,{{ barcode_data }}"-->
+<!--                 alt="Code-barres commande"-->
+<!--                 style="width: 200px; height: auto;">-->
+<!--        </div>-->
+<!--        <div class="col-md-6 text-end">-->
+<!--            <h2>Facture - Commande #{{ commande.id }}</h2>-->
+<!--            <p><strong>Date :</strong> {{ date_facture|date:"d/m/Y" }}</p>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <!-- Produits commandés -->
+    <h4 class="text-center">Produits commandés :</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Nom</th>
+                <th>Libellé</th>
+                <th>Description</th>
+                <th>Quantité</th>
+                <th>Catégorie</th>
+                <th>Date d'utilisation</th>
+                <th>Date fin d'utilisation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produit in produits %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ produit.nom }}</td>
+                    <td>{{ produit.libelle }}</td>
+                    <td>{{ produit.description }}</td>
+                    <td>{{ produit.quantite }}</td>
+                    <td>{{ produit.categorie }}</td>
+                    <td>{{ produit.date_debut|date:"d/m/Y" }}</td>
+                    <td>{{ produit.date_fin|date:"d/m/Y" }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Boutons PDF et Excel -->
+    <div class="mt-3">
+        <a href="{% url 'facture_pdf' commande.id %}" class="btn btn-danger ml-3">Télécharger en PDF</a>
+        <a href="{% url 'facture_excel' commande.id %}" class="btn btn-success ml-3">Télécharger en Excel</a>
+        <a href="{% url 'index' %}" class="btn btn-primary ml-3">← Retour</a>
+    </div>
+
+</div>
+{% endblock %}

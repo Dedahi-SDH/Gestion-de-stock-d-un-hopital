@@ -1,0 +1,65 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap & Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/index_css.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <title>{% block title %} Gestion {% endblock %}</title>
+</head>
+<body>
+    <div class="menu">
+        <ul>
+            <li class="profile text-center">
+                {% block profil_image %}
+                    <img src="{% static 'images/default-user.png' %}" alt="Image par défaut">
+                    <h2>{{ request.user.first_name }}</h2>
+                {% endblock %}
+            </li>
+
+
+            <li><a class="active" href="{% url 'index_admin' %}"><i class="fas fa-home"></i><p>Accueil</p></a></li>
+            <li><a href="{% url 'profil_admin' %}"><i class="bi bi-person"></i><p>Profil</p></a></li>
+            <li><a href="{% url 'index' %}"><i class="fas fa-home"></i><p>Accueil utilisateur</p></a></li>
+            <li><a href="{% url 'index_utilisateur' %}"><i class="fas fa-user-group"></i><p>Utilisateurs</p></a></li>
+            <li><a href="{% url 'index_stock' %}"><i class="fas fa-chart-pie"></i><p>Stock</p></a></li>
+            <li><a href="{% url 'entre_stock' %}"><i class="fas fa-arrow-circle-down"></i><p>Entrée</p></a></li>
+            <li><a href="{% url 'Sortie_stock' %}"><i class="fas fa-arrow-circle-up"></i><p>Sortie</p></a></li>
+            <li><a href="{% url 'statistique' %}"><i class="fas fa-chart-bar"></i><p>Statistique</p></a></li>
+            <li class="log-out"><a href="{% url 'deconnexion' %}"><i class="fas fa-sign-out"></i><p>Déconnecter</p></a></li>
+        </ul>
+    </div>
+
+    <!-- Messages Flash stylés -->
+    {% if messages %}
+      <div class="alert-container">
+        {% for message in messages %}
+          <div class="custom-alert alert-{{ message.tags }}">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            {{ message }}
+            <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <!-- Bloc de contenu -->
+    {% block content %}{% endblock %}
+    <script>
+      setTimeout(() => {
+        document.querySelectorAll('.custom-alert').forEach(el => el.style.display = 'none');
+      }, 3000);
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYx3fZ6UQn9YfJQZr+IOFf49Q+9HBiFjGLjY42n1uD4Jq2YGGAAtzZ4xk"
+            crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Listes des utilisateurs {% endblock %}
+{% block profil_image %}
+    <div class="img-box mb-2">
+        {% if utilisateur.image.name %}
+            <img src="{{ utilisateur.image.url }}" alt="Photo de {{ utilisateur.first_name }}" class="rounded-circle profile-img">
+        {% else %}
+            <img src="{% static 'images/default-user.png' %}" alt="Image par défaut" class="rounded-circle profile-img">
+        {% endif %}
+    </div>
+    <h2>{{ utilisateur.first_name }} {{ utilisateur.username }}</h2>
+    <small class="text-muted">{{ utilisateur.role }}</small>
+{% endblock %}
+{% block content %}
+<div class="content">
+    <div class="data-infos">
+        <div class="box">
+            <i class="fas fa-user-group"></i>
+            <div class="data">
+                <p>Médecin</p>
+                <span>{{medecin}}</span>
+            </div>
+        </div>
+        <div class="box">
+            <i class="fas fa-user-group"></i>
+            <div class="data">
+                <p>Inférmier</p>
+                <span>{{infermier}}</span>
+            </div>
+        </div>
+        <div class="box">
+            <i class="fas fa-user-group"></i>
+            <div class="data">
+                <p>anesthésie</p>
+                <span>{{anesthésie}}</span>
+            </div>
+        </div>
+        <div class="box">
+            <i class="fas fa-user-group"></i>
+            <div class="data">
+                <p>Chirurgien</p>
+                <span>{{Chirurgien}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="mt-3 mb-3">
+        <div class="container-fluid">
+            <form method="get" class="d-flex" style="width: 100%;">
+                <input type="text" name="q" class="form-control me-2"
+                       placeholder="Rechercher un produit...">
+                <button type="submit" class="btn btn-primary">Chercher</button>
+            </form>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center my-3">
+        <a href="{% url 'inscription' %}" class="btn btn-success btn-lg px-5 py-2">
+            <i class="fas fa-plus"></i> Ajouter un nouveau utilisateur
+        </a>
+    </div>
+    <main class="container-fluid mt-3">
+        <div class="little-infos">
+            <p>Les utilisateurs</p>
+            <i class="fas fa-briefcase-medical"></i>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Télephone</th>
+                    <th scope="col">Catégorie</th>
+                    <th scope="col">Num Poste</th>
+                    <th scope="col">Adresse</th>
+                    <th scope="col" colspan="3"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in utilisateurs %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ u.first_name }}</td>
+                        <td>{{ u.num_phone }}</td>
+                        <td>{{ u.categorie }}</td>
+                        <td>{{ u.num_phone }}</td>
+                        <td>{{ u.adresse }}</td>
+                        <td><a href="{% url 'visiter_utilisateur' u.id %}" class="btn btn-primary btn-sm" title="Visiter"><i class="bi bi-eye"></i></a></td>
+                        <td><a href="{% url 'modifier_utilisateur' u.id %}" class="btn btn-info btn-sm" title="Modifier"><i class="bi bi-pencil-square"></i></a></td>
+                        <td><a href="{% url 'supprimer_utilisateur' u.id %}" class="btn btn-danger btn-sm" title="Supprimer"><i class="bi bi-trash"></i></a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</div>
+{% endblock %}

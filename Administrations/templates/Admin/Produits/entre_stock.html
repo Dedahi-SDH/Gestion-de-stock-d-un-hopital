@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Listes des Entre {% endblock %}
+{% block profil_image %}
+    <div class="img-box mb-2">
+        {% if utilisateur.image.name %}
+            <img src="{{ utilisateur.image.url }}" alt="Photo de {{ utilisateur.first_name }}" class="rounded-circle profile-img">
+        {% else %}
+            <img src="{% static 'images/default-user.png' %}" alt="Image par défaut" class="rounded-circle profile-img">
+        {% endif %}
+    </div>
+    <h2>{{ utilisateur.first_name }} {{ utilisateur.last_name }}</h2>
+    <small class="text-muted">{{ utilisateur.role }}</small>
+{% endblock %}
+{% block content %}
+<div class="content">
+    <div class="mt-3 mb-3">
+        <div class="container-fluid">
+            <form method="get" class="d-flex" style="width: 100%;">
+                <input type="text" name="q" class="form-control me-2"
+                       placeholder="Rechercher une entré..."
+                       value="{{ request.GET.q }}">
+                        {% for e in entre %}
+                            {{ e.produit.nom }} - {{ e.quantite_entre }}
+                        {% empty %}
+                            Aucun résultat trouvé.
+                        {% endfor %}
+                <button type="submit" class="btn btn-primary">Chercher</button>
+            </form>
+        </div>
+    </div>
+    <table class="table">
+            <div class="little-infos">
+                <p>Liste des Entré</p>
+                <i class="fas fa-briefcase-medical"></i>
+            </div>
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">nom</th>
+                    <th scope="col">libellé</th>
+                    <th scope="col">quantité Entré</th>
+                    <th scope="col">Catégorie</th>
+                    <th scope="col">Date d'entré</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in entre %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{e.produit.nom}}</td>
+                        <td>{{e.produit.libelle}}</td>
+                        <td>{{e.produit.quantite_entre}}</td>
+                        <td>{{e.categorie}}</td>
+                        <td>{{e.date_ajout|date:"d/m/Y" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}}

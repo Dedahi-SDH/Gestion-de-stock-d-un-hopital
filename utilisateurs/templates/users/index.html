@@ -1,0 +1,90 @@
+{% extends "navbar.html" %}
+{% block title %}Index{% endblock %}
+{% block content %}
+<div class="content">
+    <div class="data-infos">
+        <div class="box">
+            <i class="fas fa-x-ray"></i>
+            <div class="data">
+                <p>Équipement</p>
+                <span>{{ eq_nombre }}</span>
+            </div>
+        </div>
+        <div class="box">
+            <i class="fas fa-stethoscope"></i>
+            <div class="data">
+                <p>Produit Médical</p>
+                <span>{{ med_nombre }}</span>
+            </div>
+        </div>
+        <div class="box">
+            <i class="fas fa-capsules"></i>
+            <div class="data">
+                <p>Pharmaceutique</p>
+                <span>{{ phar_nombre }}</span>
+            </div>
+        </div>
+        <div class="box">
+            <i class="fas fa-user-nurse"></i>
+            <div class="data">
+                <p>Produit Chirurgien</p>
+                <span>{{ chir_nombre }}</span>
+            </div>
+        </div>
+        <div class="box">
+            <i class="fas fa-dna"></i>
+            <div class="data">
+                <p>Produit Biologique</p>
+                <span>{{ bio_nombre }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="mt-3">
+    </div>
+<div class="text-center my-4">
+    <a href="{% url 'commande_multiple' %}" class="btn btn-success">
+        <i class="fas fa-plus-circle me-1"></i> Lancer des commandes
+    </a>
+</div>
+<div class="container-fluid">
+    <form method="get" class="d-flex" style="width: 100%;">
+        <input type="text" name="q" class="form-control me-2"
+               placeholder="Rechercher un produit...">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+    </form>
+</div>
+<div class="mt-3">
+    <table class="table">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Libellé</th>
+                <th>Quantité actuelle</th>
+                <th>Quantité sortie</th>
+                <th>Catégorie</th>
+                <th>Visiter</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in stocks %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ stock.produit.nom }}</td>
+                <td>{{ stock.produit.libelle }}</td>
+                <td>{{ stock.quantite_actuelle }}</td>
+                <td>{{ stock.quantite_sortie }}</td>
+                <td>{{ stock.categorie }}</td>
+                <td>
+                    <a href="{% url 'visiter' stock.id %}" title="Visiter le produit">
+                        <i class="fas fa-eye text-primary fs-5"></i>
+                    </a>
+                </td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Statistiques{% endblock %}
+{% block profil_image %}
+    <div class="img-box mb-2">
+        {% if utilisateur.image.name %}
+            <img src="{{ utilisateur.image.url }}" alt="Photo de {{ utilisateur.first_name }}" class="rounded-circle profile-img">
+        {% else %}
+            <img src="{% static 'images/default-user.png' %}" alt="Image par défaut" class="rounded-circle profile-img">
+        {% endif %}
+    </div>
+    <h2>{{ utilisateur.first_name }} {{ utilisateur.last_name }}</h2>
+    <small class="text-muted">{{ utilisateur.role }}</small>
+{% endblock %}
+{% block content %}
+    <h2 class="mb-4 text-center" style="margin-left: 70px;">Statistiques Générales</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h5 class="text-center">Répartition des Produits (Camembert)</h5>
+            <canvas id="pieChart"></canvas>
+        </div>
+        <div class="col-md-6">
+            <h5 class="text-center">Entrées vs Sorties (Courbes)</h5>
+            <canvas id="lineChart"></canvas>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const categories = {{ categories|safe }};
+        const produits = {{ produits|safe }};
+        const entrees = {{ entrees|safe }};
+        const sorties = {{ sorties|safe }};
+
+        // 🍰 Camembert des produits
+        new Chart(document.getElementById("pieChart"), {
+            type: 'pie',
+            data: {
+                labels: categories,
+                datasets: [{
+                    label: "Produits par catégorie",
+                    data: produits,
+                    backgroundColor: ['#3498db', '#e74c3c', '#2ecc71', '#9b59b6', '#f39c12', '#1abc9c']
+                }]
+            }
+        });
+
+        // 📈 Courbes Entrées vs Sorties
+        new Chart(document.getElementById("lineChart"), {
+            type: 'line',
+            data: {
+                labels: categories,
+                datasets: [
+                    {
+                        label: "Entrées",
+                        data: entrees,
+                        borderColor: '#2ecc71',
+                        fill: false,
+                        tension: 0.4
+                    },
+                    {
+                        label: "Sorties",
+                        data: sorties,
+                        borderColor: '#e74c3c',
+                        fill: false,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+{% endblock %}

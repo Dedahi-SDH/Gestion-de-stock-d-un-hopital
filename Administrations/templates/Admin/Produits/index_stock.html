@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Index Stock {% endblock %}
+{% block profil_image %}
+    <div class="img-box mb-2">
+        {% if utilisateur.image.name %}
+            <img src="{{ utilisateur.image.url }}" alt="Photo de {{ utilisateur.first_name }}" class="rounded-circle profile-img">
+        {% else %}
+            <img src="{% static 'images/default-user.png' %}" alt="Image par défaut" class="rounded-circle profile-img">
+        {% endif %}
+    </div>
+    <h2>{{ utilisateur.first_name }} {{ utilisateur.last_name }}</h2>
+    <small class="text-muted">{{ utilisateur.role }}</small>
+{% endblock %}
+{% block content %}
+<div class="content">
+        <div class="data-infos">
+            <div class="box">
+                <i class="fas fa-syringe"></i>
+                <div class="data">
+                    <p>Produit Médical</p>
+                    <span>{{med_nombre}}</span>
+                </div>
+            </div>
+            <div class="box">
+                <i class="fas fa-cogs"></i>
+                <div class="data">
+                    <p>équippement</p>
+                    <span>{{eq_nombre}}</span>
+                </div>
+            </div>
+            <div class="box">
+                <i class="fas fa-vial"></i>
+                <div class="data">
+                    <p>Produit Biologiques</p>
+                    <span>{{bio_nombre}}</span>
+                </div>
+            </div>
+            <div class="box">
+                <i class="fas fa-capsules"></i>
+                <div class="data">
+                    <p>Produit Pharmaceutique</p>
+                    <span>{{phar_nombre}}</span>
+                </div>
+            </div>
+            <div class="box">
+                <i class="fas fa-hospital"></i>
+                <div class="data">
+                    <p>Matériel Chirurgical</p>
+                    <span>{{chir_nombre}}</span>
+                </div>
+            </div>
+        </div>
+    <div class="d-flex justify-content-center my-3">
+        <a href="{% url 'ajouter_produit' %}" class="btn btn-success btn-lg px-5 py-2">
+            <i class="fas fa-plus"></i> Ajouter un nouveau produit
+        </a>
+    </div>
+    <div class="mt-3 mb-3">
+            <div class="container-fluid">
+                <form method="get" class=" d-flex" style="width: 100%;">
+                    <input type="text" name="q" class="form-control me-2"
+                           placeholder="Rechercher un produit..."
+                           value="{{ request.GET.q }}">
+                    <button type="submit" class="btn btn-primary">Chercher</button>
+                </form>
+            </div>
+        </div>
+        <main class="container-fluid mt-3">
+                <div class="little-infos">
+                    <p>Stocks de l'hopital</p>
+                    <i class="fas fa-briefcase-medical"></i>
+                </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Libellé</th>
+                    <th scope="col">Quantité actuelle</th>
+                    <th scope="col">Quantite entré</th>
+                    <th scope="col">Quantite sortie</th>
+                    <th scope="col">Catégorie</th>
+                    <th scope="col" colspan="4"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in stocks %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{stock.produit.nom}}</td>
+                            <td>{{stock.produit.libelle}}</td>
+                            <td>{{stock.quantite_actuelle}}</td>
+                            <td>{{ stock.produit.quantite_entre }}</td>
+                            <td>{{ stock.quantite_sortie }}</td>
+                            <td>{{stock.categorie}}</td>
+                            <td><a href="{% url 'visiter_produit' stock.produit.id %}" class="btn btn-primary btn-sm" title="Visiter"><i class="bi bi-eye"></i></a></td>
+                            <td><a href="{% url 'modifier_produit' stock.produit.id %}" class="btn btn-warning btn-sm" title="Modifier"><i class="bi bi-pencil-square"></i></a></td>
+                            <td><a href="{% url 'supprimer_produit' stock.produit.id %}" class="btn btn-danger btn-sm" title="Supprimer"><i class="bi bi-trash"></i></a></td>
+                            <td><a href="{% url 'ajouter_entrer' stock.produit.id %}" class="btn btn-success btn-sm" title="Ajouter une entrée"><i class="bi bi-box-arrow-in-down"></i></a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </main>
+    </div>
+{% endblock %}
