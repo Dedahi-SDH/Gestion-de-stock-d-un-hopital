@@ -58,5 +58,5 @@ python manage.py runserver
   
 ![Capture du lancement de (s) commande (s)](images/l_commande.jpg)
 
-- Auteur
+## Auteur
 Développé par : Med Abdellahi Sid'ahmed (Dedahi-SDH)
