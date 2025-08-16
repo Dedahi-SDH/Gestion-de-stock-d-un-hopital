@@ -94,7 +94,6 @@ def index(request):
         'query': query,
     })
 
-
 #vue de creation du commande:
 @login_required
 @user_passes_test(is_admin_or_user)
@@ -115,12 +114,10 @@ def creer_commande(request):
                 if form.cleaned_data:  # Vérifie que le formulaire contient des données
                     stock = form.cleaned_data.get('stock')
                     quantite = form.cleaned_data.get('quantite')
-
                     # Vérifier que stock et quantité sont renseignés
                     if not stock or not quantite:
                         continue
-
-                    # 🔴 Condition : quantité demandée > quantité actuelle
+                    #Condition : quantité demandée > quantité actuelle
                     if quantite > stock.quantite_actuelle:
                         messages.error(
                             request,
@@ -130,37 +127,30 @@ def creer_commande(request):
                         return render(request, 'users/commande_multiple.html', {
                             'formset': formset
                         })
-
-                    # ✅ Créer la ligne de commande
+                    #Créer la ligne de commande
                     CommandeItem.objects.create(
                         commande=commande,
                         stock=stock,
                         quantite=quantite
                     )
-
-                    # ✅ Créer la sortie correspondante
+                    #Créer la sortie correspondante
                     SortieProduits.objects.create(
                         stock=stock,
                         quantite_sortie=quantite
                     )
-
-                    # ✅ Mettre à jour les valeurs du stock
+                    #Mettre à jour les valeurs du stock
                     stock.quantite_sortie += quantite
                     stock.save()
-
             messages.success(request, "Commande enregistrée avec succès.")
             return redirect('facture', id=commande.id)
-
         else:
             messages.error(request, "Une erreur au niveau du nom du produit au quantite demander!!")
     else:
         formset = CommandeItemFormSet(queryset=CommandeItem.objects.none())
-
     return render(request, 'users/commande_multiple.html', {
         'formset': formset
     })
 
-#vue pour afficher l'arabe:
 #vue facture:
 @login_required
 @user_passes_test(is_admin_or_user)

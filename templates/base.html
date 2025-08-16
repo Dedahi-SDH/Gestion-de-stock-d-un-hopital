@@ -8,8 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
     <link rel="stylesheet" href="{% static 'css/index_css.css' %}">
+    {% block extra_css %}{% endblock %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <title>{% block title %} Gestion {% endblock %}</title>
@@ -33,6 +33,7 @@
             <li><a href="{% url 'entre_stock' %}"><i class="fas fa-arrow-circle-down"></i><p>Entrée</p></a></li>
             <li><a href="{% url 'Sortie_stock' %}"><i class="fas fa-arrow-circle-up"></i><p>Sortie</p></a></li>
             <li><a href="{% url 'statistique' %}"><i class="fas fa-chart-bar"></i><p>Statistique</p></a></li>
+            <li><a href="{% url 'reporting' %}"><i class="bi bi-journal-text"></i><p>Rapport</p></a></li>
             <li class="log-out"><a href="{% url 'deconnexion' %}"><i class="fas fa-sign-out"></i><p>Déconnecter</p></a></li>
         </ul>
     </div>

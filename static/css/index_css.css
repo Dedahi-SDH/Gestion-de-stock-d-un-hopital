@@ -240,4 +240,34 @@ ul li a p {
 .search-container button:hover {
     background-color: #0056b3;
 }
+.alert-container {
+  position: fixed;
+  bottom: 20px;   /* place les alertes en bas */
+  right: 20px;    /* à droite */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1050;  /* au-dessus du contenu */
+}
+
+.custom-alert {
+  padding: 10px 15px;
+  border-radius: 5px;
+  color: white;
+  min-width: 250px;
+  font-weight: 500;
+}
+
+/* Couleurs selon le type de message */
+.alert-warning { background-color: #ffc107; color: #212529; }
+.alert-success { background-color: #28a745; }
+.alert-error { background-color: #dc3545; }
+.alert-info { background-color: #17a2b8; }
+
+.close-btn {
+  margin-left: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
 

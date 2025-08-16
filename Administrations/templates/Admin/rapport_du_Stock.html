@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Rapport narratif du Stock</title>
+    <link rel="stylesheet" href="{% static 'css/rapport.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: black;
+            margin: 20px;
+        }
+
+        .rapport-container {
+            max-width: 900px;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            line-height: 1.6;
+        }
+
+        .rapport-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .rapport-header .left, .rapport-header .center, .rapport-header .right {
+            flex: 1;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .rapport-header .center img {
+            max-width: 100px; /* ou 200px selon ton besoin */
+            height: auto;
+        }
+
+        .rapport-section p {
+            margin-bottom: 12px;
+        }
+        .rapport-section ul li {
+            margin-bottom: 6px;
+        }
+
+        .rapport-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            margin-left: 20px;   /* marge à gauche si nécessaire */
+            padding-left: 0;     /* supprime le padding par défaut */
+            list-style: none;    /* supprime les puces */
+        }
+
+        hr {
+            border: 1px solid #ccc;
+            margin: 20px 0;
+        }
+
+       img {
+            max-width: 200px;
+            height: auto;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="rapport-container">
+        <!-- Header du rapport -->
+        <div class="rapport-header">
+            <div class="left">
+                <strong>الجمهورية الاسلامية الموريتانية</strong><br>
+                <strong>الشِّرَف - الإخاء - العدالة</strong><br>
+                <strong>المستشفى الوطني</strong>
+            </div>
+
+            <div class="center">
+                <img src="{% static 'images/sante_logo.jpg' %}" alt="Logo">
+            </div>
+
+            <div class="right">
+                <strong>République islamique de Mauritanie</strong><br>
+                <strong>Honneur – Fraternité – Justice</strong><br>
+                <strong>Hôpital National</strong>
+            </div>
+        </div>
+        <hr>
+
+        <!-- Titre du rapport -->
+        <div class="rapport-title">Rapport détaillé du Stock</div>
+
+        <div class="rapport-section">
+            <p>Ce rapport présente l'état actuel du stock de notre établissement au {{ today|date:"d/m/Y" }}.</p>
+
+            <p>À ce jour, le stock contient <strong>{{ produits_count }}</strong> produit(s).
+            {% if seuil_bas_count > 0 %}
+                Parmi eux, <strong>{{ seuil_bas_count }}</strong> produit(s) atteignent le seuil minimum ou sont en rupture.
+            {% else %}
+                Aucun produit n'est actuellement en dessous du seuil critique.
+            {% endif %}
+            </p>
+
+            {% if produits_presque_expire_count > 0 %}
+                <p><strong>{{ produits_presque_expire_count }}</strong> produit(s) vont expirer dans moins de 20 jours :</p>
+                <ul>
+                {% for stock in produits_presque_expire %}
+                    <li>- {{ stock.produit.nom }} (Expiration : {{ stock.produit.date_expirations|date:"d/m/Y" }})</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>Aucun produit n'est proche de sa date d'expiration.</p>
+            {% endif %}
+
+            <p>Depuis le début de la gestion du stock, il y a eu <strong>{{ entre_stock_count }}</strong> entrée(s) et <strong>{{ sortie_stock_count }}</strong> sortie(s) de produits.</p>
+
+            <p>Actuellement, <strong>{{ utilisateur_count }}</strong> utilisateur(s) sont enregistrés pour gérer et suivre les stocks.</p>
+
+            {% if seuil_bas_count > 0 %}
+                <p>Produits en dessous du seuil critique :</p>
+                <ul>
+                {% for stock in stocks %}
+                    {% if stock.quantite_actuelle <= stock.produit.seuil or stock.quantite_actuelle == 0 %}
+                        <li>- {{ stock.produit.nom }} (Quantité actuelle : {{ stock.quantite_actuelle }})</li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            <p>Ce rapport a pour objectif de fournir une synthèse complète et claire pour faciliter les décisions concernant le réapprovisionnement et la gestion proactive du stock.</p>
+            <p class="text-center">
+                <a href="{% url 'index_admin' %}" style="text-decoration:none; color:#007bff; w-100">
+                    <i class="fas fa-home"></i> Retour à l'accueil
+                </a>
+            </p>
+
+
+        </div>
+    </div>
+
+</body>
+</html>

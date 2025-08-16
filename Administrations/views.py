@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from stock.models import  Produits, Stocks, EntreProduits, SortieProduits
 from django.contrib import messages
-from .forms import AjoutProduitForm
+from .forms import AjoutProduitForm, AjouterExcel
 from authentification.forms import UpdateUserForm
 from authentification.forms import AuthForm
 from authentification.models import Utilisateurs
@@ -12,6 +12,8 @@ from django.db.models import Sum, Count
 from django.utils.decorators import decorator_from_middleware
 from django.middleware.cache import CacheMiddleware
 from django.views.decorators.cache import never_cache
+import pandas as pd
+from datetime import date, timedelta
 
 #verifier si l'utilisateur est admin:
 def is_admin(user):
@@ -159,11 +161,24 @@ def index_adminitrations(request):
     ]
     if seuil_bas:
         messages.warning(request, f"{len(seuil_bas)} produit(s) atteignent le seuil minimum ou sont en rupture !")
+        aujourd_hui = date.today()
+        seuil_expiration = timedelta(days=20)
+    produits_presque_expire = [
+        stock for stock in stocks
+        if stock.produit.date_expirations and (stock.produit.date_expirations - aujourd_hui) <= seuil_expiration
+    ]
+    if produits_presque_expire:
+        messages.warning(request, f"{len(produits_presque_expire)} produit(s) vont expirer dans moins de 20 jours !")
+    produits_presque_expire_count = len(produits_presque_expire)
+    seuil_bas_count = len(seuil_bas)
     return render(request, 'Admin/index_admin.html', {
         'stocks': stocks,
-        'utilisateurs': utilisateurs,  # Envoi les utilisateurs filtrés ou tous
+        'utilisateurs': utilisateurs,
         'stock_count': stock_count,
         'seuil_bas': seuil_bas,
+        'seuil_bas_count': seuil_bas_count,
+        'produits_presque_expire': produits_presque_expire,
+        'produits_presque_expire_count': produits_presque_expire_count,
         'utilisateur': utilisateur,
         'utilisateur_count_user': utilisateur_count_user,
         'utilisateur_count_admin': utilisateur_count_admin,
@@ -217,12 +232,12 @@ def ajouter_entree(request, id):
         if form.is_valid():
             quantite_ajoutee = form.cleaned_data['quantite']  # quantite saisie par l'admin
 
-            # ✅ Mise à jour des quantités
+            #Mise à jour des quantités
             produit.quantite += quantite_ajoutee
             produit.quantite_entre += quantite_ajoutee
             produit.save()
 
-            # ✅ Création de l’entrée (historique)
+            #Création de l’entrée (historique)
             EntreProduits.objects.create(
                 produit=produit,
                 quantite_entre=quantite_ajoutee,
@@ -354,7 +369,7 @@ def index_stock(request):
 @user_passes_test(is_admin)
 @never_cache
 def Entre_stock(request):
-    entre = EntreProduits.objects.all()
+    entre = EntreProduits.objects.all().distinct()
     utilisateurs = Utilisateurs.objects.all()
     utilisateur = request.user
     query = request.GET.get('q')
@@ -398,12 +413,6 @@ def Sortie(request):
     })
 
 @login_required
-@user_passes_test(is_admin_or_user)
-@never_cache
-def parametre(request):
-    return render(request, 'Admin/parametre.html')
-
-@login_required
 @user_passes_test(is_admin)
 @never_cache
 def statistique(request):
@@ -445,3 +454,107 @@ def statistique(request):
 @never_cache
 def retour_vers_admin(request):
     return redirect('index_admin')
+
+#import un fichier Excel:
+@login_required
+@user_passes_test(is_admin)
+@never_cache
+def import_produits_stocks(request):
+    if request.method == "POST":
+        form = AjouterExcel(request.POST, request.FILES)
+        if form.is_valid():
+            fichier_excel = request.FILES['fichier']
+            try:
+                df = pd.read_excel(fichier_excel, engine='openpyxl')
+                colonnes_attendues = [
+                    'nom', 'libelle', 'quantite', 'quantite_entre', 'description',
+                    'date_expirations', 'date_fin', 'date_debut', 'categorie', 'seuil',
+                ]
+                for col in colonnes_attendues:
+                    if col not in df.columns:
+                        messages.error(request, f"La colonne '{col}' est manquante dans le fichier Excel.")
+                        return redirect('importation_Excel')
+                for _, row in df.iterrows():
+                    # Création ou récupération du produit
+                    produit, created = Produits.objects.get_or_create(
+                        nom=row['nom'],
+                        defaults={
+                            'libelle': row['libelle'],
+                            'quantite': row['quantite'],
+                            'quantite_entre': row['quantite_entre'],
+                            'description': row['description'],
+                            'date_expirations': row['date_expirations'],
+                            'date_fin': row['date_fin'],
+                            'date_debut': row['date_debut'],
+                            'categorie': row['categorie'],
+                            'seuil': row['seuil'],
+                        }
+                    )
+                    # Mise à jour ou création du stock
+                    Stocks.objects.update_or_create(
+                        produit=produit,
+                        defaults={
+                            'nbr_produits': row['nbr_produits'],
+                            'quantite_sortie': row['quantite_sortie'],
+                            'quantite_entre': row['quantite_entre'],
+                            'categorie': row['categorie']
+                        }
+                    )
+                messages.success(request, "Importation réussie.")
+                return redirect('index_stock')
+            except ValueError:
+                messages.error(request, "Format de fichier invalide. Veuillez importer un fichier Excel (.xlsx ou .xls).")
+                return redirect('importation_Excel')
+            except Exception as e:
+                messages.error(request, f"Erreur lors de l'importation : {str(e)}")
+                return redirect('importation_Excel')
+    else:
+        form = AjouterExcel()
+    return render(request, 'Admin/Produits/importation_Excel.html', {'form': form})
+
+
+#Rapports du stock:
+@login_required
+@user_passes_test(is_admin)
+@never_cache
+def reporting_stock(request):
+    utilisateurs =Utilisateurs.objects.all()
+    utilisateur = request.user
+    utilisateur_count = Utilisateurs.objects.all().count()
+    stocks = Stocks.objects.select_related('produit').all()
+    entre_stock = EntreProduits.objects.all()
+    entre_stock_count = EntreProduits.objects.all().count()
+    sortie_stock = SortieProduits.objects.all()
+    sortie_stock_count = SortieProduits.objects.all().count()
+    produits = Produits.objects.all()
+    produits_count = Produits.objects.all().count()
+    seuil_bas = [
+        stock for stock in stocks
+        if stock.quantite_actuelle <= stock.produit.seuil or stock.quantite_actuelle == 0
+    ]
+    if seuil_bas:
+        messages.warning(request, f"{len(seuil_bas)} produit(s) atteignent le seuil minimum ou sont en rupture !")
+        aujourd_hui = date.today()
+        seuil_expiration = timedelta(days=20)
+    produits_presque_expire = [
+        stock for stock in stocks
+        if stock.produit.date_expirations and (stock.produit.date_expirations - aujourd_hui) <= seuil_expiration
+    ]
+    if produits_presque_expire:
+        messages.warning(request, f"{len(produits_presque_expire)} produit(s) vont expirer dans moins de 20 jours !")
+    produits_presque_expire_count = len(produits_presque_expire)
+    seuil_bas_count = len(seuil_bas)
+    return render(request, 'Admin/rapport_du_Stock.html',
+{
+            'produits_count': produits_count,
+            'produits_presque_expire':produits_presque_expire,
+            'produits_presque_expire_count':produits_presque_expire_count,
+            'seuil_bas_count': seuil_bas_count,
+            'utilisateur': utilisateur,
+            'utilisateurs':utilisateurs,
+            'utilisateur_count': utilisateur_count,
+            'entre_stock_count': entre_stock_count,
+            'sortie_stock_count': sortie_stock_count,
+            'stocks':stocks,
+            'today': date.today(),
+        })

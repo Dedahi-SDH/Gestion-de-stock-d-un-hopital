@@ -1,0 +1,45 @@
+body, .rapport-container {
+    all: unset; /* réinitialise les styles hérités */
+    font-family: Arial, sans-serif;
+    color: black;
+    background-color: black;
+    margin: 0;
+    padding: 20px;
+}
+
+.rapport-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    line-height: 1.6;
+}
+.rapport-section{
+    padding: 70px;
+
+}
+.rapport-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.rapport-header .left, .rapport-header .center, .rapport-header .right {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: left;
+}
+
+.rapport-header .center img {
+    height: 80px;
+}
+
+.rapport-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}

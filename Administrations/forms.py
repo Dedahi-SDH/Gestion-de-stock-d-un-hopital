@@ -24,3 +24,6 @@ class AjoutProduitForm(forms.ModelForm):
         }
 
 
+class AjouterExcel(forms.Form):
+    fichier = forms.FileField(label="Choisir un fichier Excel")
+

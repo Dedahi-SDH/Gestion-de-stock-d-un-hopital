@@ -20,11 +20,6 @@
                 <input type="text" name="q" class="form-control me-2"
                        placeholder="Rechercher une entré..."
                        value="{{ request.GET.q }}">
-                        {% for e in entre %}
-                            {{ e.produit.nom }} - {{ e.quantite_entre }}
-                        {% empty %}
-                            Aucun résultat trouvé.
-                        {% endfor %}
                 <button type="submit" class="btn btn-primary">Chercher</button>
             </form>
         </div>
@@ -50,8 +45,8 @@
                         <th scope="row">{{ forloop.counter }}</th>
                         <td>{{e.produit.nom}}</td>
                         <td>{{e.produit.libelle}}</td>
-                        <td>{{e.produit.quantite_entre}}</td>
-                        <td>{{e.categorie}}</td>
+                        <td>{{e.quantite_entre}}</td>
+                        <td>{{e.produit.categorie}}</td>
                         <td>{{e.date_ajout|date:"d/m/Y" }}</td>
                     </tr>
                 {% endfor %}

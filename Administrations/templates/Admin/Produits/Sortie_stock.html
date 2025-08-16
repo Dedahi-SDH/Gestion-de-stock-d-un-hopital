@@ -23,7 +23,6 @@
             </form>
         </div>
     </div>
-        {% if sortie.exists %}
             <div class="table-responsive">
                 <table class="table">
                     <div class="little-infos">
@@ -54,10 +53,5 @@
                     </tbody>
                 </table>
             </div>
-        {% else %}
-            <div class="alert alert-warning" role="alert">
-                Aucune sortie enregistrée pour le moment.
-            </div>
-        {% endif %}
 </div>
 {% endblock %}

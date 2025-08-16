@@ -16,10 +16,24 @@
 <div class="content">
     <div class="data-infos">
         <div class="box">
-            <i class="fas fa-arrow-circle-up"></i>
+            <i class="fas fa-chart-pie"></i>
             <div class="data">
                 <p>Stocks</p>
                 <span>{{ stock_count }}</span>
+            </div>
+        </div>
+        <div class="box">
+            <i class="fas fa-chart-pie"></i>
+            <div class="data">
+                <p>Produits en seuil</p>
+                <span>{{ seuil_bas_count }}</span>
+            </div>
+        </div>
+        <div class="box">
+            <i class="fas fa-chart-pie"></i>
+            <div class="data">
+                <p>Produits en fin expiration</p>
+                <span>{{ produits_presque_expire_count }}</span>
             </div>
         </div>
         <div class="box">
@@ -63,6 +77,40 @@
                         <td>{{ stock.produit.libelle }}</td>
                         <td>{{ stock.quantite_actuelle }}</td>
                         <td>{{ stock.produit.seuil }}</td>
+                        <td>{{ stock.produit.categorie }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    <!--  Tableau des produits qui ont une date d'expirations finie  -->
+    <!-- Produits presque périmés -->
+    {% if produits_presque_expire %}
+        <div class="container mt-4">
+            <div class="little-infos">
+                <p>Produits qui vont expirer dans moins de 20 jours</p>
+                <i class="fas fa-triangle-exclamation text-danger"></i>
+            </div>
+            <table class="table table-bordered table-striped">
+                <thead class="table-danger">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Nom</th>
+                        <th>Libellé</th>
+                        <th>Quantité Actuelle</th>
+                        <th>Date d'expiration</th>
+                        <th>Catégorie</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in produits_presque_expire %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ stock.produit.nom }}</td>
+                        <td>{{ stock.produit.libelle }}</td>
+                        <td>{{ stock.quantite_actuelle }}</td>
+                        <td>{{ stock.produit.date_expirations|date:"d/m/Y" }}</td>
                         <td>{{ stock.produit.categorie }}</td>
                     </tr>
                     {% endfor %}
