@@ -39,6 +39,24 @@ pip install -r requirements.txt
 python manage.py runserver
 ```
 
+## Images des taches principales sur l'application
 
-## Auteur
+- Interface d'administrations
+  
+![Capture de l'interface de gestion d'administration](images/i_admin.jpg)
+![Capture de l'interface de gestion d'administration](images/i_admin_2.jpg)
+
+- Exemple du Profil d'utilisateur
+  
+![Capture du profil](images/profil.jpg)
+
+- Interface d'utilisateur
+  
+![Capture de l'interface de gestion d'utilisateur ](images/i_utilisateur.jpg)
+
+- Lancement de (s) Commande (s)
+  
+![Capture du lancement de (s) commande (s)](images/l_commande.jpg)
+
+- Auteur
 Développé par : Med Abdellahi Sid'ahmed (Dedahi-SDH)
