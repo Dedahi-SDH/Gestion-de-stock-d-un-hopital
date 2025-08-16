@@ -22,13 +22,20 @@ cd Gestion-de-stock-d-un-hopital
 
 # Créer un environnement virtuel (recommandé)
 python -m venv env
-source env/bin/activate   # Sur Linux / Mac
-env\Scripts\activate      # Sur Windows
+# Sur Linux / Mac
+source env/bin/activate
+# Sur Windows
+env\Scripts\activate
 
 # Installer les dépendances
 pip install -r requirements.txt
+```
 
-# Utilisation:
+## Utilisation
+``` bash
+# Lancer le serveur Django
 python manage.py runserver
+```
 
+## Auteur
 Développé par : Med Abdellahi Sid'ahmed (Dedahi-SDH)
