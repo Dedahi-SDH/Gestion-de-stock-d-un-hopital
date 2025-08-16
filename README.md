@@ -14,6 +14,8 @@ Ce projet est une application développée en **Django** qui permet de gérer le
 - Python 3.10+  
 - pip  
 - virtualenv (recommandé)
+- Base de données : SQL
+- WAMP (Windows Apache MySQL PHP)
 
 ## Installation
 ```bash
@@ -36,6 +38,14 @@ pip install -r requirements.txt
 # Lancer le serveur Django
 python manage.py runserver
 ```
+
+## Images des taches principales sur l'application
+![Capture de l'interface de gestion d'administration](images/i_admin.jpg)
+![Capture de l'interface de gestion d'administration](images/i_admin_2.jpg)
+![Capture du profil](images/profil.jpg)
+![Capture de l'interface de gestion d'utilisateur ](images/i_utilisateur.jpg)
+![Capture du lancement de (s) commande (s)](images/l_commande.jpg)
+
 
 ## Auteur
 Développé par : Med Abdellahi Sid'ahmed (Dedahi-SDH)
